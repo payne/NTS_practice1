@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}NTS Scorer – Enter Received Message{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Enter Received Radiogram &mdash; NR {{ message.msg_number }}</h1>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">&#8592; Back</a>
+</div>
+
+<div class="card" style="margin-bottom: 1rem;">
+  <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.6;">
+    Enter the message exactly as you copied it from the air.
+    Fields are compared field-by-field against the original.
+    Do <strong>not</strong> look at the original before submitting.
+  </p>
+</div>
+
+<form method="POST" action="{{ url_for('receive_message', msg_id=message.id) }}">
+  <div class="card">
+
+    <!-- ── OPERATOR ID ─────────────────────────── -->
+    <div class="form-section">
+      <div class="form-section-title">Operator</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="operator_callsign">Your Callsign</label>
+          <input type="text" id="operator_callsign" name="operator_callsign"
+                 placeholder="e.g. W1XYZ" required autofocus>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PREAMBLE ────────────────────────────── -->
+    <div class="form-section">
+      <div class="form-section-title">Preamble (as copied)</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="msg_number">Message Number</label>
+          <input type="text" id="msg_number" name="msg_number" placeholder="NR">
+        </div>
+
+        <div class="form-group">
+          <label for="precedence">Precedence</label>
+          <select id="precedence" name="precedence">
+            <option value="">-- select --</option>
+            {% for p in precedences %}
+            <option value="{{ p }}">{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="handling">Handling Instructions</label>
+          <input type="text" id="handling" name="handling" placeholder="HX...">
+        </div>
+
+        <div class="form-group">
+          <label for="station_of_origin">Station of Origin</label>
+          <input type="text" id="station_of_origin" name="station_of_origin" placeholder="callsign">
+        </div>
+
+        <div class="form-group">
+          <label for="check_count">Check</label>
+          <input type="text" id="check_count" name="check_count" placeholder="word count">
+        </div>
+
+        <div class="form-group">
+          <label for="place_of_origin">Place of Origin</label>
+          <input type="text" id="place_of_origin" name="place_of_origin" placeholder="city state">
+        </div>
+
+        <div class="form-group">
+          <label for="time_filed">Time Filed</label>
+          <input type="text" id="time_filed" name="time_filed" placeholder="HHMM">
+        </div>
+
+        <div class="form-group">
+          <label for="date_filed">Date Filed</label>
+          <input type="text" id="date_filed" name="date_filed" placeholder="MON DD">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── ADDRESS ────────────────────────────── -->
+    <div class="form-section">
+      <div class="form-section-title">Addressee (as copied)</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="to_name">Name</label>
+          <input type="text" id="to_name" name="to_name">
+        </div>
+
+        <div class="form-group">
+          <label for="to_address">Street Address</label>
+          <input type="text" id="to_address" name="to_address">
+        </div>
+
+        <div class="form-group">
+          <label for="to_city">City</label>
+          <input type="text" id="to_city" name="to_city">
+        </div>
+
+        <div class="form-group">
+          <label for="to_state">State</label>
+          <input type="text" id="to_state" name="to_state" maxlength="2">
+        </div>
+
+        <div class="form-group">
+          <label for="to_zip">ZIP Code</label>
+          <input type="text" id="to_zip" name="to_zip">
+        </div>
+
+        <div class="form-group">
+          <label for="to_phone">Phone</label>
+          <input type="text" id="to_phone" name="to_phone">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── MESSAGE ────────────────────────────── -->
+    <div class="form-section">
+      <div class="form-section-title">Message &amp; Signature (as copied)</div>
+      <div class="form-grid-wide">
+
+        <div class="form-group">
+          <label for="message_text">Message Text</label>
+          <textarea id="message_text" name="message_text" rows="4"
+                    placeholder="Type the message text exactly as you copied it"></textarea>
+          <span class="form-hint" id="word-count-hint">Word count: 0</span>
+        </div>
+
+        <div class="form-group">
+          <label for="signature">Signature</label>
+          <input type="text" id="signature" name="signature">
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Submit &amp; Score</button>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+
+  </div>
+</form>
+
+<script>
+  const msgText = document.getElementById('message_text');
+  const hint = document.getElementById('word-count-hint');
+  function updateCount() {
+    const words = msgText.value.trim().split(/\s+/).filter(w => w.length > 0);
+    hint.textContent = 'Word count: ' + words.length;
+  }
+  msgText.addEventListener('input', updateCount);
+</script>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}NTS Scorer – View Message NR {{ message.msg_number }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Message NR {{ message.msg_number }}</h1>
+  <div style="display: flex; gap: 0.5rem;">
+    <a href="{{ url_for('receive_message', msg_id=message.id) }}" class="btn btn-receive">Receive This Message</a>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">&#8592; Back</a>
+  </div>
+</div>
+
+<!-- ── Radiogram display ─────────────────────────────────── -->
+<div class="card">
+  <h2>Original Radiogram</h2>
+  <div class="radiogram">
+    <div class="rg-preamble">
+      NR <span class="rg-value">{{ message.msg_number }}</span>
+      &nbsp;
+      <span class="prec-badge prec-{{ message.precedence }}">{{ message.precedence }}</span>
+      {% if message.handling %}
+        &nbsp;<span class="rg-value">{{ message.handling }}</span>
+      {% endif %}
+      &nbsp;
+      <span class="rg-value">{{ message.station_of_origin }}</span>
+      &nbsp;
+      <span class="rg-label">CHK</span> <span class="rg-value">{{ message.check_count }}</span>
+      &nbsp;
+      <span class="rg-value">{{ message.place_of_origin }}</span>
+      {% if message.time_filed %}
+        &nbsp;<span class="rg-value">{{ message.time_filed }}</span>
+      {% endif %}
+      &nbsp;
+      <span class="rg-value">{{ message.date_filed }}</span>
+    </div>
+
+    <div>
+      <span class="rg-label">TO: </span>
+      <span class="rg-value">{{ message.to_name }}</span>
+    </div>
+    {% if message.to_address %}
+    <div><span class="rg-value">{{ message.to_address }}</span></div>
+    {% endif %}
+    {% if message.to_city or message.to_state or message.to_zip %}
+    <div>
+      <span class="rg-value">
+        {{ message.to_city }}{% if message.to_state %} {{ message.to_state }}{% endif %}{% if message.to_zip %} {{ message.to_zip }}{% endif %}
+      </span>
+    </div>
+    {% endif %}
+    {% if message.to_phone %}
+    <div><span class="rg-label">TEL: </span><span class="rg-value">{{ message.to_phone }}</span></div>
+    {% endif %}
+
+    <div class="rg-message">{{ message.message_text }}</div>
+
+    <div>
+      <span class="rg-label">DE </span>
+      <span class="rg-sig">{{ message.signature }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Attempts history ───────────────────────────────────── -->
+<div class="card">
+  <h2>Receive Attempts ({{ received | length }})</h2>
+
+  {% if received %}
+    {% for r in received %}
+    <div class="attempt-row">
+      <div>
+        <span class="attempt-callsign">{{ r.operator_callsign }}</span>
+        <span class="attempt-time">&nbsp;&mdash;&nbsp;{{ r.submitted_at }}</span>
+      </div>
+      <div>
+        {% if r.total_score is not none %}
+          <span class="{{ r.total_score | score_class }}" style="font-size: 1.1rem; font-weight: bold;">
+            {{ '%.1f' % r.total_score }}%
+          </span>
+        {% else %}
+          <span class="text-muted">—</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted" style="padding: 1rem 0;">No receive attempts yet.</p>
+  {% endif %}
+</div>
+
+<!-- ── Danger zone ────────────────────────────────────────── -->
+<div class="card" style="border-color: var(--red);">
+  <h3 style="color: var(--red);">Danger Zone</h3>
+  <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 0.75rem;">
+    Deleting this message will also remove all {{ received | length }} receive attempt(s).
+  </p>
+  <form method="POST" action="{{ url_for('delete_message', msg_id=message.id) }}"
+        onsubmit="return confirm('Delete message NR {{ message.msg_number }} and all {{ received | length }} attempt(s)? This cannot be undone.');">
+    <button type="submit" class="btn btn-danger btn-sm">Delete Message</button>
+  </form>
+</div>
+{% endblock %}

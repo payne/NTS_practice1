@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}NTS Scorer – Add Original Message{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Add Original NTS Radiogram</h1>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">&#8592; Back</a>
+</div>
+
+<form method="POST" action="{{ url_for('create_message') }}">
+  <div class="card">
+    <!-- ── PREAMBLE ────────────────────────────── -->
+    <div class="form-section">
+      <div class="form-section-title">Preamble</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="msg_number">Message Number</label>
+          <input type="text" id="msg_number" name="msg_number" placeholder="e.g. 42" required>
+        </div>
+
+        <div class="form-group">
+          <label for="precedence">Precedence</label>
+          <select id="precedence" name="precedence">
+            {% for p in precedences %}
+            <option value="{{ p }}">{{ p }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="handling">Handling Instructions (optional)</label>
+          <input type="text" id="handling" name="handling" placeholder="e.g. HXG">
+          <span class="form-hint">HXA–HXG per ARRL handbook</span>
+        </div>
+
+        <div class="form-group">
+          <label for="station_of_origin">Station of Origin</label>
+          <input type="text" id="station_of_origin" name="station_of_origin" placeholder="e.g. W1AW" required>
+        </div>
+
+        <div class="form-group">
+          <label for="check_count">Check (word count)</label>
+          <input type="text" id="check_count" name="check_count" placeholder="auto-calculated">
+          <span class="form-hint">Leave blank to auto-count message words</span>
+        </div>
+
+        <div class="form-group">
+          <label for="place_of_origin">Place of Origin</label>
+          <input type="text" id="place_of_origin" name="place_of_origin" placeholder="e.g. NEWINGTON CT" required>
+        </div>
+
+        <div class="form-group">
+          <label for="time_filed">Time Filed (optional)</label>
+          <input type="text" id="time_filed" name="time_filed" placeholder="e.g. 1430">
+        </div>
+
+        <div class="form-group">
+          <label for="date_filed">Date Filed</label>
+          <input type="text" id="date_filed" name="date_filed" placeholder="e.g. APR 11" required>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── ADDRESS ────────────────────────────── -->
+    <div class="form-section">
+      <div class="form-section-title">Addressee</div>
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label for="to_name">Name</label>
+          <input type="text" id="to_name" name="to_name" placeholder="e.g. JOHN SMITH" required>
+        </div>
+
+        <div class="form-group">
+          <label for="to_address">Street Address (optional)</label>
+          <input type="text" id="to_address" name="to_address" placeholder="e.g. 123 MAIN ST">
+        </div>
+
+        <div class="form-group">
+          <label for="to_city">City</label>
+          <input type="text" id="to_city" name="to_city" placeholder="e.g. NEWINGTON">
+        </div>
+
+        <div class="form-group">
+          <label for="to_state">State</label>
+          <input type="text" id="to_state" name="to_state" placeholder="e.g. CT" maxlength="2">
+        </div>
+
+        <div class="form-group">
+          <label for="to_zip">ZIP Code</label>
+          <input type="text" id="to_zip" name="to_zip" placeholder="e.g. 06111">
+        </div>
+
+        <div class="form-group">
+          <label for="to_phone">Phone (optional)</label>
+          <input type="text" id="to_phone" name="to_phone" placeholder="e.g. 860-555-1234">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── MESSAGE ────────────────────────────── -->
+    <div class="form-section">
+      <div class="form-section-title">Message &amp; Signature</div>
+      <div class="form-grid-wide">
+
+        <div class="form-group">
+          <label for="message_text">Message Text</label>
+          <textarea id="message_text" name="message_text" rows="4"
+                    placeholder="Enter the message text (up to 25 words recommended for NTS)"
+                    required></textarea>
+          <span class="form-hint" id="word-count-hint">Word count: 0</span>
+        </div>
+
+        <div class="form-group">
+          <label for="signature">Signature</label>
+          <input type="text" id="signature" name="signature"
+                 placeholder="Sender's name or callsign" required>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save Message</button>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </div>
+</form>
+
+<script>
+  const msgText = document.getElementById('message_text');
+  const hint = document.getElementById('word-count-hint');
+  function updateCount() {
+    const words = msgText.value.trim().split(/\s+/).filter(w => w.length > 0);
+    hint.textContent = 'Word count: ' + words.length;
+  }
+  msgText.addEventListener('input', updateCount);
+</script>
+{% endblock %}

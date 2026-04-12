@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}NTS Scorer – Score Results{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Score Results</h1>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">&#8592; Messages</a>
+</div>
+
+<!-- ── Overall score ────────────────────────────────────────── -->
+<div class="card">
+  <div class="score-hero">
+    <div class="score-number {{ total_score | score_class }}">{{ total_score }}%</div>
+    <div class="score-label">
+      Overall Accuracy &mdash; {{ operator }}
+      {% if total_score >= 90 %}
+        &mdash; <span class="text-green">Excellent copy!</span>
+      {% elif total_score >= 75 %}
+        &mdash; <span style="color: #80e080;">Good copy.</span>
+      {% elif total_score >= 50 %}
+        &mdash; <span style="color: var(--yellow);">Partial copy — review errors.</span>
+      {% else %}
+        &mdash; <span class="text-red">Poor copy — practice more.</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  {% set bar_class = total_score | score_class | replace('score-', 'bar-') %}
+  <div style="width: 100%; background: var(--bg); border-radius: 8px; height: 16px; overflow: hidden; margin-bottom: 0.5rem;">
+    <div class="score-bar {{ bar_class }}" style="width: {{ total_score }}%; height: 100%; border-radius: 8px;"></div>
+  </div>
+  <p class="text-center text-muted" style="font-size: 0.8rem;">Weighted across {{ field_results | length }} fields</p>
+</div>
+
+<!-- ── Field-by-field table ────────────────────────────────── -->
+<div class="card" style="padding: 0; overflow: hidden;">
+  <table class="score-table">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Original</th>
+        <th>You Entered</th>
+        <th>Score</th>
+        <th>Weight</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in field_results %}
+      {% set row_class = 'field-perfect' if r.perfect else ('field-good' if r.good else ('field-fair' if r.score_pct >= 50 else 'field-poor')) %}
+      <tr class="{{ row_class }}">
+        <td>
+          {% if r.perfect %}
+            <span class="match-icon text-green">&#10003;</span>
+          {% elif r.good %}
+            <span class="match-icon" style="color: #80e080;">&#126;</span>
+          {% else %}
+            <span class="match-icon text-red">&#10007;</span>
+          {% endif %}
+          {{ r.label }}
+        </td>
+        <td class="diff-orig">
+          {% if r.original %}{{ r.original }}{% else %}<em class="text-muted">(blank)</em>{% endif %}
+        </td>
+        <td class="diff-entered">
+          {% if r.entered %}{{ r.entered }}{% else %}<em class="text-muted">(blank)</em>{% endif %}
+        </td>
+        <td>
+          {% set bar_cls = 'bar-excellent' if r.perfect else ('bar-good' if r.good else ('bar-fair' if r.score_pct >= 50 else 'bar-poor')) %}
+          <span class="score-bar-wrap">
+            <span class="score-bar {{ bar_cls }}" style="width: {{ r.score_pct }}%;"></span>
+          </span>
+          <span class="{{ 'text-green' if r.perfect else ('text-muted' if r.good else 'text-red') }}">
+            {{ r.score_pct }}%
+          </span>
+        </td>
+        <td class="text-muted">{{ r.weight_pct }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ── Legend ──────────────────────────────────────────────── -->
+<div class="card mt-2" style="font-size: 0.8rem; color: var(--text-muted);">
+  <strong class="text-amber">Scoring notes:</strong>
+  The overall score is the weighted sum of per-field scores.
+  <em>Message Text</em> is scored word-by-word (18% weight).
+  <em>Precedence</em>, <em>Check</em>, and <em>State</em> require exact matches.
+  Other fields use fuzzy string similarity.
+  Phone numbers are compared digit-only (hyphens and spaces ignored).
+</div>
+
+<!-- ── Actions ─────────────────────────────────────────────── -->
+<div class="form-actions">
+  <a href="{{ url_for('receive_message', msg_id=original['id']) }}" class="btn btn-receive">Try Again</a>
+  <a href="{{ url_for('view_message', msg_id=original['id']) }}" class="btn btn-secondary">View All Attempts</a>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary">&#8592; Messages</a>
+</div>
+{% endblock %}

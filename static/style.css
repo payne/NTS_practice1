@@ -1,0 +1,374 @@
+/* =========================================================
+   NTS Message Scorer – Stylesheet
+   ========================================================= */
+
+:root {
+  --bg:          #0f1a0f;
+  --bg-panel:    #162116;
+  --bg-card:     #1c2b1c;
+  --border:      #2e452e;
+  --border-hi:   #4a7a4a;
+  --amber:       #ffb000;
+  --amber-dim:   #b07800;
+  --green:       #00e000;
+  --green-dim:   #009000;
+  --text:        #d4e8d4;
+  --text-muted:  #7a9e7a;
+  --red:         #e04040;
+  --yellow:      #e0c000;
+  --radius:      4px;
+  --font-mono:   'Courier New', Courier, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--amber); text-decoration: none; }
+a:hover { color: #ffd060; text-decoration: underline; }
+
+/* ── Header ─────────────────────────────────────────────── */
+header {
+  background: var(--bg-panel);
+  border-bottom: 2px solid var(--amber);
+  padding: 0 1.5rem;
+}
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 54px;
+}
+.logo { display: flex; align-items: baseline; gap: 0.75rem; }
+.callsign {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+}
+.app-name { color: var(--text-muted); font-size: 0.85rem; }
+
+nav { display: flex; align-items: center; gap: 1.5rem; }
+nav a { color: var(--text-muted); font-size: 0.9rem; }
+nav a:hover { color: var(--text); text-decoration: none; }
+.btn-nav {
+  background: var(--amber);
+  color: #000 !important;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius);
+  font-weight: bold;
+}
+.btn-nav:hover { background: #ffd060; }
+
+/* ── Main ────────────────────────────────────────────────── */
+main {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* ── Flash messages ──────────────────────────────────────── */
+.flash-container { margin-bottom: 1rem; }
+.flash {
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 0.4rem;
+  border-left: 4px solid;
+}
+.flash-success { background: #0e2a0e; border-color: var(--green); color: var(--green); }
+.flash-error   { background: #2a0e0e; border-color: var(--red);   color: var(--red); }
+.flash-info    { background: #1a1a2a; border-color: var(--amber);  color: var(--amber); }
+
+/* ── Cards / Panels ──────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.card h2, .card h3 {
+  color: var(--amber);
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+/* ── Page heading ────────────────────────────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.page-header h1 { color: var(--amber); font-size: 1.3rem; }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+.btn-primary   { background: var(--amber);   color: #000; }
+.btn-primary:hover { background: #ffd060; text-decoration: none; color: #000; }
+.btn-secondary { background: transparent; color: var(--amber); border: 1px solid var(--amber); }
+.btn-secondary:hover { background: #1c2b1c; text-decoration: none; }
+.btn-danger    { background: var(--red);     color: #fff; }
+.btn-danger:hover { background: #ff6060; text-decoration: none; }
+.btn-receive   { background: var(--green-dim); color: #fff; }
+.btn-receive:hover { background: var(--green); color: #000; text-decoration: none; }
+.btn-sm { padding: 0.25rem 0.6rem; font-size: 0.8rem; }
+
+/* ── Messages table (index) ──────────────────────────────── */
+.msg-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.msg-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-panel);
+  color: var(--amber);
+  border-bottom: 2px solid var(--border-hi);
+  white-space: nowrap;
+}
+.msg-table td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.msg-table tr:hover td { background: #1a281a; }
+.prec-badge {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+}
+.prec-ROUTINE   { background: #1a2a1a; color: #80c080; border: 1px solid #3a6a3a; }
+.prec-WELFARE   { background: #1a1a2a; color: #8080c0; border: 1px solid #3a3a6a; }
+.prec-PRIORITY  { background: #2a2a1a; color: #c0c080; border: 1px solid #6a6a3a; }
+.prec-EMERGENCY { background: #2a1a1a; color: var(--red); border: 1px solid #6a3a3a; }
+
+/* ── Form layout ─────────────────────────────────────────── */
+.form-section {
+  margin-bottom: 1.5rem;
+}
+.form-section-title {
+  color: var(--amber-dim);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+.form-grid-wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+.form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+.form-group label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.6rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--amber);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.form-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+/* ── NTS Radiogram display ───────────────────────────────── */
+.radiogram {
+  background: var(--bg);
+  border: 2px solid var(--border-hi);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+.radiogram .rg-label {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+.radiogram .rg-value {
+  color: var(--green);
+  font-weight: bold;
+}
+.radiogram .rg-preamble {
+  color: var(--amber);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  word-break: break-all;
+}
+.radiogram .rg-message {
+  color: var(--text);
+  font-size: 1rem;
+  margin: 0.75rem 0;
+  padding: 0.5rem;
+  border-left: 3px solid var(--amber-dim);
+}
+.radiogram .rg-sig { color: var(--amber); }
+
+/* ── Score display ───────────────────────────────────────── */
+.score-hero {
+  text-align: center;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.score-number {
+  font-size: 4rem;
+  font-weight: bold;
+  line-height: 1;
+}
+.score-label { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.3rem; }
+
+.score-excellent { color: var(--green); }
+.score-good      { color: #80e080; }
+.score-fair      { color: var(--yellow); }
+.score-poor      { color: var(--red); }
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.score-table th {
+  text-align: left;
+  padding: 0.45rem 0.75rem;
+  background: var(--bg-panel);
+  color: var(--amber-dim);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border);
+}
+.score-table td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.score-table tr.field-perfect td { background: #0a1e0a; }
+.score-table tr.field-good   td  { background: #121c0a; }
+.score-table tr.field-fair   td  { background: #1c1c0a; }
+.score-table tr.field-poor   td  { background: #1c0a0a; }
+
+.score-bar-wrap {
+  width: 80px;
+  height: 10px;
+  background: var(--bg);
+  border-radius: 5px;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.4rem;
+}
+.score-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s;
+}
+.bar-excellent { background: var(--green); }
+.bar-good      { background: #80e080; }
+.bar-fair      { background: var(--yellow); }
+.bar-poor      { background: var(--red); }
+
+.diff-orig { color: var(--text-muted); }
+.diff-entered { color: var(--text); }
+.match-icon { font-size: 1rem; }
+
+/* ── Attempts history ────────────────────────────────────── */
+.attempt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.attempt-row:last-child { border-bottom: none; }
+.attempt-callsign { color: var(--amber); font-weight: bold; }
+.attempt-time { color: var(--text-muted); font-size: 0.75rem; }
+
+/* ── Footer ──────────────────────────────────────────────── */
+footer {
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/* ── Utilities ───────────────────────────────────────────── */
+.text-muted   { color: var(--text-muted); }
+.text-amber   { color: var(--amber); }
+.text-green   { color: var(--green); }
+.text-red     { color: var(--red); }
+.text-center  { text-align: center; }
+.mt-1  { margin-top: 0.5rem; }
+.mt-2  { margin-top: 1rem; }
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 1rem;
+}
+.empty-state p { margin-top: 0.5rem; }
